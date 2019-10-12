@@ -3,15 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct {
-	char* buffer;
-	size_t buffer_length;
-	ssize_t input_length;
-} InputBuffer;
+#include "parser.h"
 
 
-void prompt() {
-	printf("?> ");
+void execute_statement(Statement* statement) {
+	switch (statement->type) {
+		case (STATEMENT_INSERT):
+			printf("This is where we would do an insert.\n");
+			break;
+		case (STATEMENT_SELECT):
+			printf("This is where we would do a select.\n");
+			break;
+	}
 }
 
 
@@ -39,8 +42,20 @@ int main(int argc, char* argv[]) {
 			free(input->buffer);
 			free(input);
 			return 0;
-		} else {
-			printf("Unknown identifier '%s'. \n", input->buffer);
+		} 
+
+		Statement statement;
+	
+		switch (prepare_statement(input, &statement)) {
+			case (PREPARE_SUCCESS):
+				break;
+			case (PREPARE_UNRECOGNIZED_STATEMENT):
+				printf("Unrecognized keyword at start of '%s'.\n",
+				input->buffer);
+			continue;
 		}
+
+		execute_statement(&statement);
+		printf("Executed.\n");
 	}
 }
