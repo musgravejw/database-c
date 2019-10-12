@@ -57,6 +57,13 @@ typedef struct {
 } Statement;
 
 
+typedef struct {
+	Table *table;
+	uint32_t row_num;
+	int end_of_table;  // Indicates a position one past the last element
+} Cursor;
+
+
 // find the size of an attribute in a struct
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
 

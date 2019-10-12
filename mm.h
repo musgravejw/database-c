@@ -127,19 +127,19 @@ void print_row(Row *row) {
 }
 
 
-void serialize_row(Row *source, 
-				   void* destination) {
-	memcpy(destination + ID_OFFSET, &(source->id), ID_SIZE);
-	memcpy(destination + USERNAME_OFFSET, &(source->username), USERNAME_SIZE);
-	memcpy(destination + EMAIL_OFFSET, &(source->email), EMAIL_SIZE);
+void serialize_row(Row *src, 
+				   void* dst) {
+	memcpy(dst + ID_OFFSET, &(src->id), ID_SIZE);
+	memcpy(dst + USERNAME_OFFSET, &(src->username), USERNAME_SIZE);
+	memcpy(dst + EMAIL_OFFSET, &(src->email), EMAIL_SIZE);
 }
 
 
-void deserialize_row(void* source, 
-					 Row *destination) {
-	memcpy(&(destination->id), source + ID_OFFSET, ID_SIZE);
-	memcpy(&(destination->username), source + USERNAME_OFFSET, USERNAME_SIZE);
-	memcpy(&(destination->email), source + EMAIL_OFFSET, EMAIL_SIZE);
+void deserialize_row(void* src, 
+					 Row *dst) {
+	memcpy(&(dst->id), src + ID_OFFSET, ID_SIZE);
+	memcpy(&(dst->username), src + USERNAME_OFFSET, USERNAME_SIZE);
+	memcpy(&(dst->email), src + EMAIL_OFFSET, EMAIL_SIZE);
 }
 
 
@@ -174,13 +174,48 @@ void* get_page(Pager *pager,
 }
 
 
-void* row_slot(Table *table, 
-			   uint32_t row_num) {
+void* cursor_value(Cursor *cursor) {
+	Table *table = cursor->table;
+
+	uint32_t row_num = cursor->row_num;
 	uint32_t page_num = row_num / ROWS_PER_PAGE;
+
 	void* page = get_page(table->pager, page_num);
 
 	uint32_t row_offset = row_num % ROWS_PER_PAGE;
 	uint32_t byte_offset = row_offset * ROW_SIZE;
 	
 	return page + byte_offset;
+}
+
+
+Cursor* table_start(Table *table) {
+  Cursor *cursor = malloc(sizeof(Cursor));
+
+  cursor->table = table;
+  cursor->row_num = 0;
+  cursor->end_of_table = (table->num_rows == 0);
+
+  return cursor;
+}
+
+
+Cursor* table_end(Table *table) {
+  Cursor *cursor = malloc(sizeof(Cursor));
+
+  cursor->table = table;
+  cursor->row_num = table->num_rows;
+  cursor->end_of_table = 1;
+
+  return cursor;
+}
+
+
+void cursor_advance(Cursor *cursor) {
+	cursor->row_num += 1;
+	Table *table = cursor->table;
+
+	if (cursor->row_num >= table->num_rows) {
+		cursor->end_of_table = 1;
+	}
 }
