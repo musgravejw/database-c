@@ -14,4 +14,9 @@ Database implemented from scratch
 0 directories, 7 files
 ```
 
-Starts at `repl.c`.
+Usage:
+
+```
+$ make
+$ ./db [filename]
+```

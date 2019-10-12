@@ -51,10 +51,11 @@ int main(int argc, char* argv[]) {
 		input->input_length = n - 1;
 		input->buffer[n - 1] = 0;
 
-		if(strcmp(input->buffer, "quit") == 0 || 
-			strcmp(input->buffer, "exit") == 0) {
+		if(strcmp(input->buffer, "quit") == 0 || strcmp(input->buffer, "exit") == 0) {
+			db_close(table);
 			free(input->buffer);
 			free(input);
+
 			return 0;
 		} 
 
@@ -67,8 +68,7 @@ int main(int argc, char* argv[]) {
 		        printf("Syntax error. Could not parse statement.\n");
 		        continue;
 			case (PREPARE_UNRECOGNIZED_STATEMENT):
-				printf("Unrecognized keyword at start of '%s'.\n",
-				input->buffer);
+				printf("Unrecognized keyword at start of '%s'.\n", input->buffer);
 			continue;
 		}
 
