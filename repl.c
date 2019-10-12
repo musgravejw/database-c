@@ -16,7 +16,12 @@
 
 
 void prompt() {
-	printf("?> ");
+	printf("\n?> ");
+}
+
+
+void motd() {
+	printf("\n#############\n# Hey there #\n#############\n");
 }
 
 
@@ -26,7 +31,7 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
-	printf("\n#############\n# Hey there #\n#############\n\n");
+	motd();
 
 	char *filename = argv[1];
 	Table *table = db_open(filename);
@@ -74,7 +79,7 @@ int main(int argc, char* argv[]) {
 
 		switch (execute_statement(&statement, table)) {
 			case (EXECUTE_SUCCESS):
-				printf("Executed.\n");
+				printf("Done.\n");
 				break;
 			case (EXECUTE_TABLE_FULL):
 				printf("Error: Table full.\n");
