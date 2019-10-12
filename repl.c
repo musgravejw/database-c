@@ -1,22 +1,10 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "datatypes.h"
 #include "parser.h"
-
-
-void execute_statement(Statement* statement) {
-	switch (statement->type) {
-		case (STATEMENT_INSERT):
-			printf("This is where we would do an insert.\n");
-			break;
-		case (STATEMENT_SELECT):
-			printf("This is where we would do a select.\n");
-			break;
-	}
-}
-
+#include "vm.h"
 
 int main(int argc, char* argv[]) {
 	InputBuffer* input = malloc(sizeof(InputBuffer));

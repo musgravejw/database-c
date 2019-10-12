@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 
 typedef struct {
 	char* buffer;
@@ -7,8 +5,10 @@ typedef struct {
 	ssize_t input_length;
 } InputBuffer;
 
+
 typedef enum { PREPARE_SUCCESS, PREPARE_UNRECOGNIZED_STATEMENT } PrepareResult;
 typedef enum { STATEMENT_INSERT, STATEMENT_SELECT } StatementType;
+
 
 typedef struct {
   StatementType type;

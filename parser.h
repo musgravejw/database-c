@@ -1,10 +1,4 @@
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "datatypes.h"
-
 PrepareResult prepare_statement(InputBuffer* input,
                                 Statement* statement) {
 	if (strncmp(input->buffer, "INSERT", 6) == 0 ||
