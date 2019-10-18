@@ -1,16 +1,24 @@
 
 ExecuteResult execute_insert(Statement *statement, 
 							 Table *table) {
-	if (table->num_rows >= TABLE_MAX_ROWS) {
-		return EXECUTE_TABLE_FULL;
+	void* node = get_page(table->pager, table->root_page_num);
+	
+	uint32_t num_cells = (*leaf_node_num_cells(node));
+	Row* row_to_insert = &(statement->row_to_insert);
+	uint32_t key_to_insert = row_to_insert->id;
+	Cursor* cursor = table_find(table, key_to_insert);
+
+	if (cursor->cell_num < num_cells) {
+		uint32_t key_at_index = *leaf_node_key(node, cursor->cell_num);
+
+		if (key_at_index == key_to_insert)
+			return EXECUTE_DUPLICATE_KEY;
 	}
 
-	Row* row_to_insert = &(statement->row_to_insert);
-	Cursor *cursor = table_end(table);
+	leaf_node_insert(cursor, row_to_insert->id, row_to_insert);
 
-	serialize_row(row_to_insert, cursor_value(cursor));
-
-	table->num_rows += 1;
+	printf("Tree:\n");
+	print_tree(table->pager, 0, 0);
 	free(cursor);
 
 	return EXECUTE_SUCCESS;

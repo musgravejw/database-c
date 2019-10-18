@@ -15,6 +15,7 @@ typedef enum {
 
 typedef enum { 
 	EXECUTE_SUCCESS, 
+	EXECUTE_DUPLICATE_KEY,
 	EXECUTE_TABLE_FULL 
 } ExecuteResult;
 
@@ -33,13 +34,14 @@ const uint32_t PAGE_SIZE = 4096;
 typedef struct {
 	int file_descriptor;
 	uint32_t file_length;
+	uint32_t num_pages;
 	void* pages[TABLE_MAX_PAGES];
 } Pager;
 
 
 typedef struct {
-	uint32_t num_rows;
 	Pager *pager;
+	uint32_t root_page_num;
 	void* pages[TABLE_MAX_PAGES];
 } Table;
 
@@ -59,7 +61,8 @@ typedef struct {
 
 typedef struct {
 	Table *table;
-	uint32_t row_num;
+	uint32_t page_num;
+	uint32_t cell_num;
 	int end_of_table;  // Indicates a position one past the last element
 } Cursor;
 
@@ -75,5 +78,3 @@ const uint32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
 const uint32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
 const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
-const uint32_t ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
-const uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
