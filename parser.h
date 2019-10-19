@@ -1,7 +1,7 @@
 
 PrepareResult prepare_statement(InputBuffer *input,
                                 Statement *statement) {
-	if (strncmp(input->buffer, "INSERT", 6) == 0 ) {
+	if (strncmp(input->buffer, "INSERT", 6) == 0) {
 		int args_assigned = sscanf(input->buffer, 
 								  "INSERT %d %s %s", 
 								  &(statement->row_to_insert.id),
@@ -15,7 +15,7 @@ PrepareResult prepare_statement(InputBuffer *input,
 		return PREPARE_SUCCESS;
 	}
 
-	if (strncmp(input->buffer, "insert", 6) == 0 ) {
+	if (strncmp(input->buffer, "insert", 6) == 0) {
 		int args_assigned = sscanf(input->buffer, 
 								  "insert %d %s %s", 
 								  &(statement->row_to_insert.id),
@@ -38,3 +38,4 @@ PrepareResult prepare_statement(InputBuffer *input,
 
 	return PREPARE_UNRECOGNIZED_STATEMENT;
 }
+

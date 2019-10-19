@@ -1,12 +1,12 @@
 
 ExecuteResult execute_insert(Statement *statement, 
-							 Table *table) {
+			     Table *table) {
 	void* node = get_page(table->pager, table->root_page_num);
 	
 	uint32_t num_cells = (*leaf_node_num_cells(node));
-	Row* row_to_insert = &(statement->row_to_insert);
+	Row *row_to_insert = &(statement->row_to_insert);
 	uint32_t key_to_insert = row_to_insert->id;
-	Cursor* cursor = table_find(table, key_to_insert);
+	Cursor *cursor = table_find(table, key_to_insert);
 
 	if (cursor->cell_num < num_cells) {
 		uint32_t key_at_index = *leaf_node_key(node, cursor->cell_num);
@@ -26,7 +26,7 @@ ExecuteResult execute_insert(Statement *statement,
 
 
 ExecuteResult execute_select(Statement *statement, 
-							 Table *table) {
+			     Table *table) {
 	Cursor *cursor = table_start(table);
 	Row row;
 	
@@ -43,7 +43,7 @@ ExecuteResult execute_select(Statement *statement,
 
 
 ExecuteResult execute_statement(Statement *statement, 
-								Table *table) {
+				Table *table) {
 	switch (statement->type) {
 		case (STATEMENT_INSERT):
 			return execute_insert(statement, table);
@@ -51,3 +51,4 @@ ExecuteResult execute_statement(Statement *statement,
 			return execute_select(statement, table);
 	}
 }
+

@@ -74,7 +74,7 @@ const uint32_t LEAF_NODE_LEFT_SPLIT_COUNT = (LEAF_NODE_MAX_CELLS + 1) - LEAF_NOD
 
 
 uint32_t* internal_node_cell(void* node, 
-							 uint32_t cell_num) {
+			     uint32_t cell_num) {
 	return node + INTERNAL_NODE_HEADER_SIZE + cell_num * INTERNAL_NODE_CELL_SIZE;
 }
 
@@ -85,7 +85,7 @@ uint32_t* internal_node_right_child(void* node) {
 
 
 uint32_t* internal_node_key(void* node, 
-							uint32_t key_num) {
+			    uint32_t key_num) {
 	return (void*)internal_node_cell(node, key_num) + INTERNAL_NODE_CHILD_SIZE;
 }
 
@@ -96,7 +96,7 @@ uint32_t* internal_node_num_keys(void* node) {
 
 
 uint32_t* internal_node_child(void* node, 
-							  uint32_t child_num) {
+			      uint32_t child_num) {
 	uint32_t num_keys = *internal_node_num_keys(node);
 
 	if (child_num > num_keys) {
@@ -122,32 +122,32 @@ uint32_t* leaf_node_num_cells(void* node) {
 
 
 void* leaf_node_cell(void* node, 
-					 uint32_t cell_num) {
+		     uint32_t cell_num) {
   return node + LEAF_NODE_HEADER_SIZE + cell_num * LEAF_NODE_CELL_SIZE;
 }
 
 
 uint32_t* leaf_node_key(void* node, 
-						uint32_t cell_num) {
+			uint32_t cell_num) {
   return leaf_node_cell(node, cell_num);
 }
 
 
 void* leaf_node_value(void* node, 
-					  uint32_t cell_num) {
+		      uint32_t cell_num) {
   return leaf_node_cell(node, cell_num) + LEAF_NODE_KEY_SIZE;
 }
 
 
 void set_node_type(void* node, 
-				   NodeType type) {
+		   NodeType type) {
 	uint8_t value = type;
 	*((uint8_t*)(node + NODE_TYPE_OFFSET)) = value;
 }
 
 
 void set_node_root(void* node, 
-				   int is_root) {
+		   int is_root) {
 	uint8_t value = is_root;
 	*((uint8_t*)(node + IS_ROOT_OFFSET)) = value;
 }
@@ -177,8 +177,8 @@ uint32_t* node_parent(void* node) { return node + PARENT_POINTER_OFFSET; }
 
 
 void update_internal_node_key(void* node,
-							  uint32_t old_key, 
-							  uint32_t new_key) {
+			      uint32_t old_key, 
+			      uint32_t new_key) {
 	uint32_t old_child_index = internal_node_find_child(node, old_key);
 	*internal_node_key(node, old_child_index) = new_key;
 }
@@ -192,8 +192,8 @@ void indent(uint32_t level) {
 
 
 void leaf_node_insert(Cursor *cursor, 
-					  uint32_t key, 
-					  Row *value) {
+		      uint32_t key, 
+		      Row *value) {
 	void* node = get_page(cursor->table->pager, cursor->page_num);
 	uint32_t num_cells = *leaf_node_num_cells(node);
 
@@ -216,8 +216,8 @@ void leaf_node_insert(Cursor *cursor,
 
 
 Cursor* leaf_node_find(Table *table, 
-					   uint32_t page_num, 
-					   uint32_t key) {
+		       uint32_t page_num, 
+		       uint32_t key) {
 	void* node = get_page(table->pager, page_num);
 	uint32_t num_cells = *leaf_node_num_cells(node);
 
@@ -256,7 +256,7 @@ NodeType get_node_type(void* node) {
 
 
 void internal_node_insert(Table *table, 
-						  uint32_t parent_page_num,
+			  uint32_t parent_page_num,
                           uint32_t child_page_num) {
 	/*
 	Add a new child/key pair to parent that corresponds to child
@@ -298,7 +298,7 @@ void internal_node_insert(Table *table,
 
 
 uint32_t internal_node_find_child(void* node, 
-								  uint32_t key) {
+				  uint32_t key) {
 	/*
 	Return the index of the child which should contain
 	the given key.
@@ -325,8 +325,8 @@ uint32_t internal_node_find_child(void* node,
 
 
 Cursor* internal_node_find(Table *table, 
-						   uint32_t page_num, 
-						   uint32_t key) {
+			   uint32_t page_num, 
+			   uint32_t key) {
 	void* node = get_page(table->pager, page_num);
 
 	uint32_t child_index = internal_node_find_child(node, key);
@@ -344,8 +344,8 @@ Cursor* internal_node_find(Table *table,
 
 
 void leaf_node_split_and_insert(Cursor *cursor, 
-								uint32_t key, 
-								Row *value) {
+				uint32_t key, 
+				Row *value) {
 	/*
 	Create a new node and move half the cells over.
 	Insert the new value in one of the two nodes.
@@ -407,7 +407,7 @@ void leaf_node_split_and_insert(Cursor *cursor,
 
 
 void create_new_root(Table *table, 
-					 uint32_t right_child_page_num) {
+		     uint32_t right_child_page_num) {
 	/*
 	Handle splitting the root.
 	Old root copied to new page, becomes left child.
@@ -448,8 +448,8 @@ uint32_t get_node_max_key(void* node) {
 
 
 void print_tree(Pager *pager, 
-				uint32_t page_num, 
-				uint32_t indentation_level) {
+		uint32_t page_num, 
+		uint32_t indentation_level) {
 	void* node = get_page(pager, page_num);
 	uint32_t num_keys, child;
 
@@ -484,3 +484,4 @@ void print_tree(Pager *pager,
 			break;
 	}
 }
+

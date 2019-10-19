@@ -55,7 +55,7 @@ typedef struct {
 
 typedef struct {
 	StatementType type;
-	Row row_to_insert;  // only used by insert statement
+	Row row_to_insert;  // used for insert
 } Statement;
 
 
@@ -63,7 +63,7 @@ typedef struct {
 	Table *table;
 	uint32_t page_num;
 	uint32_t cell_num;
-	int end_of_table;  // Indicates a position one past the last element
+	int end_of_table;  // last element + 1
 } Cursor;
 
 

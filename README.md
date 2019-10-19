@@ -23,4 +23,7 @@ Heavily drawn from https://cstack.github.com/db_tutorial with my own changes.
 ```
 $ make
 $ ./db [filename]
+
+?> insert [id] [name] [value]
+?> select
 ```

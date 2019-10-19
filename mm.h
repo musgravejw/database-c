@@ -13,7 +13,7 @@ Pager* pager_open(const char *filename) {
 
 	off_t file_length = lseek(fd, 0, SEEK_END);
 
-	Pager* pager = malloc(sizeof(Pager));
+	Pager *pager = malloc(sizeof(Pager));
 	pager->file_descriptor = fd;
 	pager->file_length = file_length;
 	pager->num_pages = (file_length / PAGE_SIZE);
@@ -31,7 +31,7 @@ Pager* pager_open(const char *filename) {
 
 
 void pager_flush(Pager *pager, 
-				 uint32_t page_num) {
+		 uint32_t page_num) {
 	if (pager->pages[page_num] == NULL) {
 		printf("Tried to flush null page\n");
 		exit(EXIT_FAILURE);
@@ -123,7 +123,7 @@ void print_row(Row *row) {
 
 
 void serialize_row(Row *src, 
-				   void* dst) {
+		   void* dst) {
 	memcpy(dst + ID_OFFSET, &(src->id), ID_SIZE);
 	memcpy(dst + USERNAME_OFFSET, &(src->username), USERNAME_SIZE);
 	memcpy(dst + EMAIL_OFFSET, &(src->email), EMAIL_SIZE);
@@ -131,7 +131,7 @@ void serialize_row(Row *src,
 
 
 void deserialize_row(void* src, 
-					 Row *dst) {
+		     Row *dst) {
 	memcpy(&(dst->id), src + ID_OFFSET, ID_SIZE);
 	memcpy(&(dst->username), src + USERNAME_OFFSET, USERNAME_SIZE);
 	memcpy(&(dst->email), src + EMAIL_OFFSET, EMAIL_SIZE);
@@ -139,7 +139,7 @@ void deserialize_row(void* src,
 
 
 void* get_page(Pager *pager, 
-			   uint32_t page_num) {
+	       uint32_t page_num) {
 	if (page_num > TABLE_MAX_PAGES) {
 		printf("Tried to fetch page number out of bounds. %d > %d\n", page_num, TABLE_MAX_PAGES);
 		exit(EXIT_FAILURE);
@@ -187,7 +187,7 @@ void* cursor_value(Cursor *cursor) {
 	where it should be inserted
 */
 Cursor* table_find(Table *table, 
-				   uint32_t key) {
+		   uint32_t key) {
 	uint32_t root_page_num = table->root_page_num;
 	void* root_node = get_page(table->pager, root_page_num);
 
@@ -229,3 +229,4 @@ void cursor_advance(Cursor *cursor) {
 		}
 	}
 }
+
