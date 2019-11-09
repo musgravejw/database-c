@@ -51,4 +51,3 @@ ExecuteResult execute_statement(Statement *statement,
 			return execute_select(statement, table);
 	}
 }
-

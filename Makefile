@@ -1,2 +1,2 @@
 target:
-	@gcc repl.c -o db
+	@gcc src/repl.c -o db

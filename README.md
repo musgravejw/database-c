@@ -8,22 +8,44 @@ Heavily drawn from https://cstack.github.com/db_tutorial with my own changes.
 ├── LICENSE
 ├── Makefile
 ├── README.md
-├── b-tree.h
-├── datatypes.h
-├── mm.h
-├── parser.h
-├── repl.c
-└── vm.h
+└── src
+    ├── b-tree.h
+    ├── datatypes.h
+    ├── mm.h
+    ├── parser.h
+    ├── repl.c
+    └── vm.h
 
-0 directories, 9 files
+1 directory, 9 files
 ```
 
-# Usage
-
+## Install
 ```
 $ make
-$ ./db [filename]
+```
+
+## Usage
+
+```
+$ ./db 
+
+
+ ############################## 
+ ##  ________  ________      ##
+ ## |\   ___ \|\   __  \     ##
+ ## \ \  \_|\ \ \  \|\ /_    ##
+ ##  \ \  \  \ \ \   __  \   ##
+ ##   \ \  \__\ \ \  \|\  \  ##
+ ##    \ \_______\ \_______\ ##
+ ##     \|_______|\|_______| ##
+ ##############################
+
+Please select a database
+?> [database]
+
+?> create table [table name]
 
 ?> insert [id] [name] [value]
+
 ?> select
 ```
