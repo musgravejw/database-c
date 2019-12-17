@@ -1,4 +1,4 @@
 target:
 	mkdir -p dist
-	@gcc src/repl.c -o dist/db
+	@gcc src/server.c -o dist/db
 

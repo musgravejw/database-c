@@ -70,7 +70,7 @@ void pager_flush(Pager *pager,
 	off_t offset = lseek(pager->file_descriptor, page_num * PAGE_SIZE, SEEK_SET);
 
 	if (offset == -1) {
-		printf("Error seeking: %d\n", errno);
+		printf("Error reading: \n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -78,7 +78,7 @@ void pager_flush(Pager *pager,
 	write(pager->file_descriptor, pager->pages[page_num], PAGE_SIZE);
 
 	if (bytes_written == -1) {
-		printf("Error writing: %d\n", errno);
+		printf("Error writing: \n");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -187,7 +187,7 @@ void* get_page(Pager *pager,
 			lseek(pager->file_descriptor, page_num * PAGE_SIZE, SEEK_SET);
 			ssize_t bytes_read = read(pager->file_descriptor, page, PAGE_SIZE);
 			if (bytes_read == -1) {
-				printf("Error reading file: %d\n", errno);
+				printf("Error reading file\n");
 				exit(EXIT_FAILURE);
 			}
 		}
