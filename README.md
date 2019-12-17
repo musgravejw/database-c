@@ -1,5 +1,5 @@
 # Database
-Database implemented from scratch.
+Micro Database implementation.
 
 Heavily drawn from https://cstack.github.com/db_tutorial with my own changes.
 
@@ -28,6 +28,7 @@ $ make
 
 ## Usage
 
+### Server
 ```
 $ ./dist/db 
 
@@ -41,6 +42,15 @@ $ ./dist/db
  ##    \ \_______\ \_______\ ##
  ##     \|_______|\|_______| ##
  ##############################
+
+Starting server...
+Listening on port 8080...
+
+```
+
+### REPL
+```
+$./dist/repl
 
 Please select a database
 ?> [database]
