@@ -8,6 +8,8 @@ Heavily drawn from https://cstack.github.com/db_tutorial with my own changes.
 ├── LICENSE
 ├── Makefile
 ├── README.md
+├── dist
+│   └── db
 └── src
     ├── b-tree.h
     ├── datatypes.h
@@ -16,7 +18,7 @@ Heavily drawn from https://cstack.github.com/db_tutorial with my own changes.
     ├── repl.c
     └── vm.h
 
-1 directory, 9 files
+2 directories, 10 files
 ```
 
 ## Install
@@ -27,7 +29,7 @@ $ make
 ## Usage
 
 ```
-$ ./db 
+$ ./dist/db 
 
 
  ############################## 
@@ -49,3 +51,9 @@ Please select a database
 
 ?> select
 ```
+
+## License
+ * This project is licensed under a BSD 3-Clause License
+
+Copyright (c) 2019, John Musgrave All rights reserved.
+
