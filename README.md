@@ -1,9 +1,12 @@
 # Database
-Database implemented from scratch.
+
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/musgravejw/database)
+
+Micro Database implementation.
 
 Heavily drawn from https://cstack.github.com/db_tutorial with my own changes.
 
-```
+```shell
 .
 ├── LICENSE
 ├── Makefile
@@ -22,13 +25,14 @@ Heavily drawn from https://cstack.github.com/db_tutorial with my own changes.
 ```
 
 ## Install
-```
+```shell
 $ make
 ```
 
 ## Usage
 
-```
+### Server
+```shell
 $ ./dist/db 
 
 
@@ -41,6 +45,15 @@ $ ./dist/db
  ##    \ \_______\ \_______\ ##
  ##     \|_______|\|_______| ##
  ##############################
+
+Starting server...
+Listening on port 8080...
+
+```
+
+### REPL
+```shell
+$./dist/repl
 
 Please select a database
 ?> [database]
