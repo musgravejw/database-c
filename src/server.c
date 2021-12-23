@@ -60,12 +60,12 @@ struct client {
 
 
 void prompt() {
-	printf("\n?> ");
+  printf("\n?> ");
 }
 
 
 void motd() {
-	printf("\n ############################## \
+  printf("\n ############################## \
 \n ##  ________  ________      ##\
 \n ## |\\   ___ \\|\\   __  \\     ##\
 \n ## \\ \\  \\_|\\ \\ \\  \\|\\ /_    ##\
@@ -81,122 +81,122 @@ char **history;
 int head;
 
 int history_add(char *command) {
-	strcpy(history[head], command);
-	head++;
+  strcpy(history[head], command);
+  head++;
 
-	if (sizeof(history) / sizeof(char *) / 2 > head) {
-		// reallocate history
-	}
+  if (sizeof(history) / sizeof(char *) / 2 > head) {
+    // reallocate history
+  }
 }
 
 
 int main(int argc, char* argv[]) {
-	motd();
+  motd();
 
-	struct sockaddr_in server_address;
-	struct protoent *protocol;
-	int server_socket;
-	int enable = 1;
-	ssize_t bytes_read;
-	char *buffer;
-	struct client clients[CLIENT_COUNT] = { 0 };
-	size_t client_count = 0;
-	char filename[32] = "mydb";
+  struct sockaddr_in server_address;
+  struct protoent *protocol;
+  int server_socket;
+  int enable = 1;
+  ssize_t bytes_read;
+  char *buffer;
+  struct client clients[CLIENT_COUNT] = { 0 };
+  size_t client_count = 0;
+  char filename[32] = "mydb";
 
-	printf("\nStarting server...");
+  printf("\nStarting server...");
 
-	// open socket on host
-	protocol = getprotobyname("tcp");
-	server_socket = socket(AF_INET, SOCK_STREAM, protocol->p_proto);
+  // open socket on host
+  protocol = getprotobyname("tcp");
+  server_socket = socket(AF_INET, SOCK_STREAM, protocol->p_proto);
 
-	if (protocol == -1 || server_socket == -1) return -1;
-	if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0) return -1;
+  if (protocol == -1 || server_socket == -1) return -1;
+  if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0) return -1;
 
-	server_address.sin_family = AF_INET;
-	server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-	server_address.sin_port = htons(8080);
+  server_address.sin_family = AF_INET;
+  server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_address.sin_port = htons(8080);
 
-	if (bind(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) == -1) return -1;
-	if (listen(server_socket, 5) == -1) return -1;
+  if (bind(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) == -1) return -1;
+  if (listen(server_socket, 5) == -1) return -1;
 
-	fcntl(server_socket, F_SETFL, fcntl(server_socket, F_GETFL, 0) | O_NONBLOCK);
-	buffer = malloc(1028);
+  fcntl(server_socket, F_SETFL, fcntl(server_socket, F_GETFL, 0) | O_NONBLOCK);
+  buffer = malloc(1028);
 
-	printf("\nListening on port 8080...\n");
+  printf("\nListening on port 8080...\n");
 
-	InputBuffer *input = malloc(sizeof(InputBuffer));
+  InputBuffer *input = malloc(sizeof(InputBuffer));
 
-	input->buffer = malloc(1028);
-	input->buffer_length = 0;
-	input->input_length = 0;
+  input->buffer = malloc(1028);
+  input->buffer_length = 0;
+  input->input_length = 0;
 
-	Table *table = db_open(filename);
-	history = malloc(sizeof(char *) * 32);
-	head = 0;
+  Table *table = db_open(filename);
+  history = malloc(sizeof(char *) * 32);
+  head = 0;
 
-	while(1) {
-		history[head] = malloc(sizeof(char*));
+  while(1) {
+    history[head] = malloc(sizeof(char*));
 
-		if (client_count < sizeof clients / sizeof *clients) {
-			struct sockaddr_in client_address;
+    if (client_count < sizeof clients / sizeof *clients) {
+      struct sockaddr_in client_address;
 
-			socklen_t client_socklen = sizeof(client_address);
-			int client_socket = accept(server_socket, (struct sockaddr*) &client_address, &client_socklen);
+      socklen_t client_socklen = sizeof(client_address);
+      int client_socket = accept(server_socket, (struct sockaddr*) &client_address, &client_socklen);
 
-			if (client_socket != -1) {
-				fcntl(client_socket, F_SETFL, fcntl(client_socket, F_GETFL, 0) | O_NONBLOCK);
-				clients[client_count++] = (struct client) { .address = client_address, .addr_len = client_socklen, .socket = client_socket };
+      if (client_socket != -1) {
+        fcntl(client_socket, F_SETFL, fcntl(client_socket, F_GETFL, 0) | O_NONBLOCK);
+        clients[client_count++] = (struct client) { .address = client_address, .addr_len = client_socklen, .socket = client_socket };
 
-				printf("\nNew client connection: %d", client_count);                                                         
-			}
-		}
+        printf("\nNew client connection: %d", client_count);                                                         
+      }
+    }
 
-		for (size_t i = 0; i < client_count; i++) {
-			ssize_t bytes_recvd = read(clients[i].socket, input->buffer, 1028);
-			printf("\nReceived from client %d:\n%s\n", i, input->buffer);
+    for (size_t i = 0; i < client_count; i++) {
+      ssize_t bytes_recvd = read(clients[i].socket, input->buffer, 1028);
+      printf("\nReceived from client %d:\n%s\n", i, input->buffer);
 
-			input->input_length = bytes_recvd - 1;
-			input->buffer[bytes_recvd - 1] = 0;
+      input->input_length = bytes_recvd - 1;
+      input->buffer[bytes_recvd - 1] = 0;
 
-			Statement statement;
+      Statement statement;
 
-			switch (prepare_statement(input, &statement)) {
-				case (PREPARE_SUCCESS):
-					break;
-			    case (PREPARE_SYNTAX_ERROR):
-			        printf("Syntax error. Could not parse statement.\n");
-			        continue;
-				case (PREPARE_UNRECOGNIZED_STATEMENT):
-					printf("Unrecognized keyword at start of '%s'.\n", input->buffer);
-				continue;
-			}
+      switch (prepare_statement(input, &statement)) {
+        case (PREPARE_SUCCESS):
+          break;
+          case (PREPARE_SYNTAX_ERROR):
+              printf("Syntax error. Could not parse statement.\n");
+              continue;
+        case (PREPARE_UNRECOGNIZED_STATEMENT):
+          printf("Unrecognized keyword at start of '%s'.\n", input->buffer);
+        continue;
+      }
 
-			history_add(input->buffer);
+      history_add(input->buffer);
 
-			switch (execute_statement(&statement, table)) {
-				case (EXECUTE_SUCCESS):
-					printf("Done.\n");
-					break;
-				case (EXECUTE_DUPLICATE_KEY):
-					printf("Error: Duplicate key.\n");
-					break;
-				case (EXECUTE_TABLE_FULL):
-					printf("Error: Table full.\n");
-					break;
-			}
+      switch (execute_statement(&statement, table)) {
+        case (EXECUTE_SUCCESS):
+          printf("Done.\n");
+          break;
+        case (EXECUTE_DUPLICATE_KEY):
+          printf("Error: Duplicate key.\n");
+          break;
+        case (EXECUTE_TABLE_FULL):
+          printf("Error: Table full.\n");
+          break;
+      }
 
-			if (bytes_recvd == 0) {
-				db_close(table);
-				free(input->buffer);
-				free(input);
-				close(clients[i].socket);
-				client_count--;
-				memmove(clients + i, clients + i + 1, (client_count - i) * sizeof clients);
-				continue;
-			}
-		}
+      if (bytes_recvd == 0) {
+        db_close(table);
+        free(input->buffer);
+        free(input);
+        close(clients[i].socket);
+        client_count--;
+        memmove(clients + i, clients + i + 1, (client_count - i) * sizeof clients);
+        continue;
+      }
+    }
 
-		sleep(0);
-	}
+    sleep(0);
+  }
 }
 

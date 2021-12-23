@@ -30,28 +30,28 @@
 
 
 typedef struct {
-	char *buffer;
-	size_t buffer_length;
-	ssize_t input_length;
+  char *buffer;
+  size_t buffer_length;
+  ssize_t input_length;
 } InputBuffer;
 
 
 typedef enum {
-	PREPARE_SUCCESS,
-	PREPARE_SYNTAX_ERROR,
-	PREPARE_UNRECOGNIZED_STATEMENT
+  PREPARE_SUCCESS,
+  PREPARE_SYNTAX_ERROR,
+  PREPARE_UNRECOGNIZED_STATEMENT
 } PrepareResult;
 
 
 typedef enum { 
-	EXECUTE_SUCCESS, 
-	EXECUTE_DUPLICATE_KEY,
-	EXECUTE_TABLE_FULL 
+  EXECUTE_SUCCESS, 
+  EXECUTE_DUPLICATE_KEY,
+  EXECUTE_TABLE_FULL 
 } ExecuteResult;
 
 typedef enum { 
-	STATEMENT_INSERT, 
-	STATEMENT_SELECT 
+  STATEMENT_INSERT, 
+  STATEMENT_SELECT 
 } StatementType;
 
 #define COLUMN_USERNAME_SIZE 32
@@ -62,38 +62,38 @@ const uint32_t PAGE_SIZE = 4096;
 
 
 typedef struct {
-	int file_descriptor;
-	uint32_t file_length;
-	uint32_t num_pages;
-	void* pages[TABLE_MAX_PAGES];
+  int file_descriptor;
+  uint32_t file_length;
+  uint32_t num_pages;
+  void* pages[TABLE_MAX_PAGES];
 } Pager;
 
 
 typedef struct {
-	Pager *pager;
-	uint32_t root_page_num;
-	void* pages[TABLE_MAX_PAGES];
+  Pager *pager;
+  uint32_t root_page_num;
+  void* pages[TABLE_MAX_PAGES];
 } Table;
 
 
 typedef struct {
-	uint32_t id;
-	char username[COLUMN_USERNAME_SIZE];
-	char email[COLUMN_EMAIL_SIZE];
+  uint32_t id;
+  char username[COLUMN_USERNAME_SIZE];
+  char email[COLUMN_EMAIL_SIZE];
 } Row;
 
 
 typedef struct {
-	StatementType type;
-	Row row_to_insert;  // used for insert
+  StatementType type;
+  Row row_to_insert;  // used for insert
 } Statement;
 
 
 typedef struct {
-	Table *table;
-	uint32_t page_num;
-	uint32_t cell_num;
-	int end_of_table;  // last element + 1
+  Table *table;
+  uint32_t page_num;
+  uint32_t cell_num;
+  int end_of_table;  // last element + 1
 } Cursor;
 
 

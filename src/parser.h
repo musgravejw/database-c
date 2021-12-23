@@ -32,60 +32,60 @@
 
 PrepareResult prepare_statement(InputBuffer *input,
                                 Statement *statement) {
-	// convert to lowercase
+  // convert to lowercase
 
-	if (strncmp(input->buffer, "insert", 6) == 0) {
-		int args_assigned = sscanf(input->buffer, 
-								  "insert %s %s %s",
-								  statement->row_to_insert.username, 
-								  statement->row_to_insert.email);
+  if (strncmp(input->buffer, "insert", 6) == 0) {
+    int args_assigned = sscanf(input->buffer, 
+                  "insert %s %s %s",
+                  statement->row_to_insert.username, 
+                  statement->row_to_insert.email);
 
-		// statement->row_to_insert.id;
+    // statement->row_to_insert.id;
 
-		// parse tuple
+    // parse tuple
 
-		if (args_assigned < 3) return PREPARE_SYNTAX_ERROR;
+    if (args_assigned < 3) return PREPARE_SYNTAX_ERROR;
 
-		// INSERT INTO [table] VALUES([..])
-		if (array == 'into')
-			statement->type = STATEMENT_INSERT;
+    // INSERT INTO [table] VALUES([..])
+    if (array == 'into')
+      statement->type = STATEMENT_INSERT;
 
-		return PREPARE_SUCCESS;
-	} else if (strncmp(input->buffer, "create", 6) == 0) {
-		int args_assigned = sscanf(input->buffer, 
-								  "create %s %s", 
-								  &(statement->row_to_insert.id),
-								  type,
-								  identifier);
-		if (args_assigned < 2) return PREPARE_SYNTAX_ERROR;
+    return PREPARE_SUCCESS;
+  } else if (strncmp(input->buffer, "create", 6) == 0) {
+    int args_assigned = sscanf(input->buffer, 
+                  "create %s %s", 
+                  &(statement->row_to_insert.id),
+                  type,
+                  identifier);
+    if (args_assigned < 2) return PREPARE_SYNTAX_ERROR;
 
-		// CREATE TABLE [VALUES]
-		// CREATE DATABASE [name]
-		// CREATE INDEX [TYPE] [TABLE]
+    // CREATE TABLE [VALUES]
+    // CREATE DATABASE [name]
+    // CREATE INDEX [TYPE] [TABLE]
 
-		if (type == 'table') 
-			// parse values
-			statement->type = STATEMENT_INSERT;
-		else if (type == 'database')
-			// parse name
-			;
+    if (type == 'table') 
+      // parse values
+      statement->type = STATEMENT_INSERT;
+    else if (type == 'database')
+      // parse name
+      ;
 
-		return PREPARE_SUCCESS;
-	} else if (strcmp(input->buffer, "select") == 0) {
-		int args_assigned = sscanf(input->buffer, 
-								  "select %s %s %s", 
-								  &(statement->row_to_insert.id),
-								  type,
-								  identifier);
-		if (args_assigned < 3) return PREPARE_SYNTAX_ERROR;
+    return PREPARE_SUCCESS;
+  } else if (strcmp(input->buffer, "select") == 0) {
+    int args_assigned = sscanf(input->buffer, 
+                  "select %s %s %s", 
+                  &(statement->row_to_insert.id),
+                  type,
+                  identifier);
+    if (args_assigned < 3) return PREPARE_SYNTAX_ERROR;
 
-		// SELECT [..]
+    // SELECT [..]
 
-		if (type == 'from') statement->type = STATEMENT_SELECT;
-	
-		return PREPARE_SUCCESS;
-	}
+    if (type == 'from') statement->type = STATEMENT_SELECT;
+  
+    return PREPARE_SUCCESS;
+  }
 
-	return PREPARE_UNRECOGNIZED_STATEMENT;
+  return PREPARE_UNRECOGNIZED_STATEMENT;
 }
 
